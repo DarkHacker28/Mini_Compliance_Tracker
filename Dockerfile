@@ -9,8 +9,10 @@ RUN npm install --omit=dev
 # Install client dependencies and build
 COPY client/package.json client/package-lock.json ./client/
 RUN cd client && npm ci
-COPY client/ ./client/
-RUN cd client && npx vite build
+
+# REPLACE with:
+COPY client/package.json ./client/
+RUN cd client && npm install
 
 # Copy server code
 COPY server/ ./server/
