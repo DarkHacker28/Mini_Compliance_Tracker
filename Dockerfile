@@ -2,25 +2,27 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# REPLACE with:
-COPY package.json ./
-RUN npm install --omit=dev
+# Install root dependencies
+COPY package.json package-lock.json ./
+RUN npm install
 
-# Install client dependencies and build
+# Install client dependencies
 COPY client/package.json client/package-lock.json ./client/
-RUN cd client && npm ci
-
-# REPLACE with:
-COPY client/package.json ./client/
 RUN cd client && npm install
+
+# Copy ALL client source and build React app
+COPY client/ ./client/
+RUN cd client && npm run build
 
 # Copy server code
 COPY server/ ./server/
+
+# Copy data folder for SQLite
+COPY data/ ./data/
 
 # Seed the database
 RUN node server/seed.js
 
 EXPOSE 3001
-
 ENV NODE_ENV=production
 CMD ["node", "server/index.js"]
