@@ -2,9 +2,9 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install root dependencies
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+# REPLACE with:
+COPY package.json ./
+RUN npm install --omit=dev
 
 # Install client dependencies and build
 COPY client/package.json client/package-lock.json ./client/
